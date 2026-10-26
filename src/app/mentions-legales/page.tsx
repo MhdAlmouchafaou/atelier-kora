@@ -14,9 +14,9 @@ export default function MentionsPage() {
   return (
     <>
       <PageIntro title="Mentions légales" />
-      <div className="border-t border-trait">
-        <div className="conteneur grid gap-12 pt-10 pb-24 md:grid-cols-12">
-          <div className="space-y-12 md:col-span-8 lg:col-span-7 [&_h2]:text-[1.75rem] [&_h2]:leading-tight [&_p]:mt-3 [&_p]:text-graphite">
+      <div>
+        <div className="conteneur grid gap-12 pt-16 pb-28 md:grid-cols-12 lg:pt-24">
+          <div className="space-y-12 md:col-span-8 lg:col-span-7 [&_h2]:text-[2rem] [&_h2]:leading-tight [&_p]:mt-3 [&_p]:text-brou">
             <section>
               <h2>Éditeur</h2>
               <p>

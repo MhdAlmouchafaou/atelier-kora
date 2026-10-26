@@ -5,6 +5,8 @@ construit avec Next.js, Tailwind CSS et Claude Code.
 
 Cinq pages : accueil, services, réalisations (galerie filtrable avec
 visionneuse), l'atelier, demande de devis (formulaire envoyé par email).
+Interface animée avec GSAP (ScrollTrigger, SplitText, Flip), défilement
+doux avec Lenis et transitions de page avec les View Transitions de React.
 Plus les mentions légales, une page 404, le sitemap, le robots.txt, les
 données structurées et l'image de partage.
 
@@ -25,7 +27,7 @@ Le site s'ouvre sur http://localhost:3000.
 | Fichier | Rôle |
 | --- | --- |
 | BRIEF.md | Cahier des charges |
-| DESIGN.md | Direction artistique : couleurs, police, règles |
+| DESIGN.md | Direction artistique : couleurs, police, mouvement, règles |
 | CLAUDE.md, AGENTS.md | Règles lues par Claude Code et Codex |
 | contenu/reponses-client.md | Réponses du client, source de tous les textes |
 | contenu/textes.md | Textes des pages, rédigés à partir des réponses |
@@ -36,6 +38,19 @@ Le site s'ouvre sur http://localhost:3000.
 
 Pour changer une coordonnée, une réalisation ou un service, modifiez
 seulement le fichier de `src/content` concerné : toutes les pages suivent.
+
+## Animations
+
+| Fichier | Rôle |
+| --- | --- |
+| src/lib/motion.ts | Chargement de GSAP et de ses extensions |
+| src/components/motion/smooth-scroll.tsx | Défilement doux (souris seulement) |
+| src/components/motion/motion-root.tsx | Animations au défilement, déclarées par des attributs `data-anim` |
+| src/app/template.tsx | Transition entre les pages |
+| src/app/globals.css | Ouverture de l'accueil (en CSS), courbes, mouvement réduit |
+
+Les animations sont désactivées quand le visiteur a demandé de réduire
+les animations dans son système. Le contenu reste lisible sans JavaScript.
 
 ## Formulaire de contact
 
@@ -70,9 +85,7 @@ npx skills add https://github.com/hardikpandya/stop-slop --skill stop-slop
 ## Vérifications faites
 
 - `npm run build` et `npm run lint` sans erreur.
-- Rendu contrôlé à 375, 768 et 1280 px.
-- Lighthouse (mobile) : performance de 93 à 99, accessibilité, bonnes
-  pratiques et SEO à 100 sur l'accueil, les services et les réalisations.
+- Rendu contrôlé à 375, 768, 1280 et 1440 px, en faisant défiler chaque page.
 - Tests automatiques (Playwright) : filtres de la galerie, visionneuse au
   clavier, menu mobile, formulaire (erreurs, focus, envoi), route API.
 - Contrastes de couleurs mesurés (voir DESIGN.md).

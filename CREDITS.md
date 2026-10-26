@@ -27,6 +27,10 @@ https://images.unsplash.com/photo-IDENTIFIANT
 | atelier/ciseaux-a-bois.jpg | 1497218770144-3fea6dbc33fe |
 | atelier/planche-noyer.jpg | 1463082459669-fd1ca1692fea |
 | atelier/copeaux.jpg | 1470342495351-a5f90c5011cd |
+| matiere/atelier-sciage.jpg | 1547609434-b732edfee020 |
+| matiere/chaise-atelier.jpg | 1631396326646-c06a935ff3a6 |
+| matiere/claustra-tasseaux.jpg | 1487266659293-c4762f375955 |
+| matiere/texture-chene.jpg (texture des titres, recadrée) | 1548268364-3acee266b695 |
 
 Police : Archivo (Omnibus-Type), licence SIL Open Font License,
 fichiers issus du paquet @fontsource-variable/archivo.

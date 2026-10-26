@@ -1,5 +1,7 @@
+import Link from "next/link";
 import { site } from "@/content/site";
-import { PrimaryLink } from "./buttons";
+import { Magnetic } from "./motion/magnetic";
+import { Words } from "@/components/motion/words";
 
 // Bandeau d'appel, en bas de chaque page.
 export function CtaBand({
@@ -10,24 +12,31 @@ export function CtaBand({
   text?: string;
 }) {
   return (
-    <section aria-labelledby="cta-titre" className="bg-vert text-white">
-      <div className="conteneur section grid gap-8 md:grid-cols-12 md:items-end">
-        <div className="md:col-span-7">
-          <h2 id="cta-titre" className="titre-2 max-w-[20ch]">
-            {title}
-          </h2>
-          <p className="mt-4 max-w-[46ch] text-[1.125rem] text-sauge">{text}</p>
-        </div>
-        <div className="flex flex-col items-start gap-4 md:col-span-4 md:col-start-9">
-          <PrimaryLink href="/contact" tone="blanc" className="w-full sm:w-auto">
-            Demander un devis
-          </PrimaryLink>
-          <p className="text-sauge">
-            Ou appelez l&apos;atelier au{" "}
-            <a href={site.phone.href} className="lien font-semibold whitespace-nowrap text-white">
-              {site.phone.display}
-            </a>
+    <section aria-labelledby="cta-titre" className="sur-chene bg-chene text-noyer">
+      <div className="conteneur section">
+        <h2 id="cta-titre" data-anim="titre" className="titre-1 max-w-[14ch]">
+          <Words>{title}</Words>
+        </h2>
+        <div className="mt-12 grid gap-10 border-t border-noyer/25 pt-10 lg:mt-16 lg:grid-cols-12 lg:items-center">
+          <p data-anim="bloc" className="chapeau max-w-[34ch] lg:col-span-6">
+            {text}
           </p>
+          <div
+            data-anim="bloc"
+            className="flex flex-col items-start gap-5 sm:flex-row sm:items-center lg:col-span-6 lg:justify-end"
+          >
+            <Magnetic>
+              <Link href="/contact" className="bouton bouton-noyer min-h-16 px-9 text-[1.125rem]">
+                Demander un devis
+              </Link>
+            </Magnetic>
+            <p>
+              ou au{" "}
+              <a href={site.phone.href} className="lien font-semibold whitespace-nowrap">
+                {site.phone.display}
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </section>

@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
 import { JsonLd } from "@/components/json-ld";
+import { Cursor } from "@/components/motion/cursor";
+import { SmoothScroll } from "@/components/motion/smooth-scroll";
 import { site } from "@/content/site";
 import "./globals.css";
 
@@ -34,7 +35,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#edeeea",
+  themeColor: "#241913",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -43,16 +44,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="flex min-h-dvh flex-col">
         <a
           href="#contenu"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:bg-encre focus:px-4 focus:py-3 focus:text-papier"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[70] focus:rounded-full focus:bg-chene focus:px-5 focus:py-3 focus:text-noyer"
         >
           Aller au contenu
         </a>
         <Header />
-        <main id="contenu" className="flex-1">
-          {children}
-        </main>
-        <Footer />
+        {/* La page et le pied de page sont dans app/template.tsx (transition de page). */}
+        {children}
         <JsonLd />
+        <SmoothScroll />
+        <Cursor />
       </body>
     </html>
   );

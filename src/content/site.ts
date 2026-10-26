@@ -19,6 +19,16 @@ export const site = {
     { days: "Du lundi au vendredi", time: "8 h à 12 h et 13 h 30 à 17 h 30" },
     { days: "Samedi matin", time: "Sur rendez-vous" },
   ],
+  /** Mêmes horaires, lus par l'indicateur « Atelier ouvert » de l'accueil. */
+  openingHours: {
+    /** Fuseau horaire de l'atelier : à confirmer avec l'adresse réelle. */
+    timeZone: "Europe/Paris",
+    days: [1, 2, 3, 4, 5],
+    ranges: [
+      ["08:00", "12:00"],
+      ["13:30", "17:30"],
+    ],
+  },
   zone: "Dans un rayon de 60 km autour de l'atelier",
   founded: 2009,
 } as const;

@@ -1,8 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { type Project, type ProjectType, projectTypes, typeLabel } from "@/content/projets";
+import { Flip, gsap, prefersReducedMotion, smoothScroll } from "@/lib/motion";
 
 type Filter = ProjectType | "tout";
 
@@ -33,7 +41,14 @@ export function Gallery({ projects }: { projects: Project[] }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
 
+  const grid = useRef<HTMLUListElement>(null);
+  const flipState = useRef<ReturnType<typeof Flip.getState> | null>(null);
+
   const choose = (value: Filter) => {
+    if (value === filter) return;
+    if (grid.current && !prefersReducedMotion()) {
+      flipState.current = Flip.getState(grid.current.querySelectorAll("[data-flip-id]"));
+    }
     const url = new URL(window.location.href);
     if (value === "tout") url.searchParams.delete("type");
     else url.searchParams.set("type", value);
@@ -56,6 +71,27 @@ export function Gallery({ projects }: { projects: Project[] }) {
     [visible.length],
   );
 
+  // Changement de filtre : les photos restantes glissent à leur nouvelle place,
+  // les nouvelles apparaissent, celles qui partent s'effacent.
+  useLayoutEffect(() => {
+    const state = flipState.current;
+    if (!state || !grid.current) return;
+    flipState.current = null;
+    Flip.from(state, {
+      targets: grid.current.querySelectorAll("[data-flip-id]"),
+      duration: 0.9,
+      ease: "expo.inOut",
+      absolute: true,
+      stagger: 0.02,
+      onEnter: (els) =>
+        gsap.fromTo(
+          els,
+          { opacity: 0, scale: 0.9 },
+          { opacity: 1, scale: 1, duration: 0.8, delay: 0.25 },
+        ),
+    });
+  }, [filter]);
+
   // À l'ouverture : focus sur « Fermer » et la page derrière ne défile plus.
   useEffect(() => {
     if (!isOpen) return;
@@ -63,8 +99,10 @@ export function Gallery({ projects }: { projects: Project[] }) {
     const root = document.documentElement;
     const previous = root.style.overflow;
     root.style.overflow = "hidden";
+    smoothScroll.stop();
     return () => {
       root.style.overflow = previous;
+      smoothScroll.start();
     };
   }, [isOpen]);
 
@@ -88,8 +126,8 @@ export function Gallery({ projects }: { projects: Project[] }) {
   ];
 
   return (
-    <section aria-label="Galerie des réalisations" className="border-t border-trait">
-      <div className="conteneur pt-8 pb-20 lg:pb-28">
+    <section aria-label="Galerie des réalisations">
+      <div className="conteneur pt-14 pb-24 lg:pt-20 lg:pb-40">
         <div role="group" aria-label="Filtrer par type de projet" className="flex flex-wrap gap-2">
           {options.map((option) => (
             <button
@@ -97,10 +135,10 @@ export function Gallery({ projects }: { projects: Project[] }) {
               type="button"
               aria-pressed={filter === option.value}
               onClick={() => choose(option.value)}
-              className="group inline-flex min-h-11 items-center gap-2 rounded-[3px] border border-trait px-4 text-[0.9375rem] font-medium transition-colors hover:border-encre aria-pressed:border-encre aria-pressed:bg-encre aria-pressed:text-papier"
+              className="group inline-flex min-h-12 items-center gap-2.5 rounded-full border border-filet px-5 font-medium transition-colors duration-300 hover:border-noyer aria-pressed:border-noyer aria-pressed:bg-noyer aria-pressed:text-sciure"
             >
               {option.label}
-              <span className="font-normal text-graphite [font-variant-numeric:tabular-nums] group-aria-pressed:text-sauge">
+              <span className="mention text-brou group-aria-pressed:text-chene">
                 {option.count}
               </span>
             </button>
@@ -111,52 +149,76 @@ export function Gallery({ projects }: { projects: Project[] }) {
           {visible.length} réalisations affichées
         </p>
 
-        <ul className="mt-10 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-12">
-          {visible.map((project, index) => (
-            <li key={project.slug}>
-              <button
-                type="button"
-                onClick={() => open(index)}
-                className="group block w-full text-left"
-                aria-haspopup="dialog"
+        <ul
+          ref={grid}
+          className="mt-12 grid gap-x-6 gap-y-14 sm:grid-cols-2 lg:mt-16 lg:grid-cols-12 lg:gap-x-8 lg:gap-y-20"
+        >
+          {visible.map((project, index) => {
+            // Rythme de la grille : une grande photo, une plus étroite, puis l'inverse.
+            const wide = index % 4 === 0 || index % 4 === 3;
+            return (
+              <li
+                key={project.slug}
+                data-flip-id={project.slug}
+                className={wide ? "lg:col-span-7" : "lg:col-span-5"}
               >
-                <span className="relative block aspect-[3/2] overflow-hidden bg-trait">
-                  <Image
-                    src={project.image}
-                    alt=""
-                    fill
-                    sizes="(min-width: 1280px) 380px, (min-width: 1024px) 31vw, (min-width: 640px) 48vw, 100vw"
-                    className="object-cover transition-opacity group-hover:opacity-90"
-                  />
-                </span>
-                <span className="mt-3 grid gap-0.5">
-                  <span className="font-semibold underline-offset-4 group-hover:underline">
-                    {project.title}
+                <button
+                  type="button"
+                  onClick={() => open(index)}
+                  data-curseur="Agrandir"
+                  className="group block w-full text-left"
+                  aria-haspopup="dialog"
+                >
+                  <span
+                    className={`relative block overflow-hidden rounded-[1.25rem] bg-filet ${
+                      wide ? "aspect-[3/2]" : "aspect-[3/2] lg:aspect-[16/15]"
+                    }`}
+                  >
+                    <Image
+                      src={project.image}
+                      alt=""
+                      fill
+                      sizes={
+                        wide
+                          ? "(min-width: 1440px) 780px, (min-width: 1024px) 56vw, (min-width: 640px) 48vw, 100vw"
+                          : "(min-width: 1440px) 560px, (min-width: 1024px) 40vw, (min-width: 640px) 48vw, 100vw"
+                      }
+                      preload={index === 0}
+                      className="object-cover transition-transform duration-[1.2s] ease-(--ease-expo) group-hover:scale-105"
+                    />
                   </span>
-                  <span className="cote-texte">
-                    {project.wood}. {project.finish}.
+                  <span className="mt-4 grid gap-1 sm:grid-cols-[1fr_auto] sm:gap-x-6">
+                    <span className="text-[1.25rem] leading-tight font-bold [font-variation-settings:'wdth'_80]">
+                      {project.title}
+                    </span>
+                    <span className="mention text-brou sm:text-right">
+                      {typeLabel(project.type)}
+                    </span>
+                    <span className="mention text-brou sm:col-span-2">
+                      {project.wood}. {project.finish}. {project.dimensions}.
+                    </span>
+                    <span className="sr-only">, agrandir la photo</span>
                   </span>
-                  <span className="cote-texte">{project.dimensions}</span>
-                  <span className="sr-only">, agrandir la photo</span>
-                </span>
-              </button>
-            </li>
-          ))}
+                </button>
+              </li>
+            );
+          })}
         </ul>
       </div>
 
       <dialog
         ref={dialogRef}
         aria-labelledby="visionneuse-titre"
+        data-lenis-prevent
         onClose={() => setOpenIndex(null)}
         onClick={(e) => {
           if (e.target === e.currentTarget) e.currentTarget.close();
         }}
-        className="m-auto h-dvh max-h-none w-full max-w-none bg-papier p-0 text-encre outline-none backdrop:bg-encre/80 open:animate-[apparaitre_200ms_ease-out] md:h-[min(90dvh,56rem)] md:w-[min(92vw,80rem)]"
+        className="m-auto h-dvh max-h-none w-full max-w-none bg-noyer p-0 text-sciure outline-none backdrop:bg-noyer/90 open:animate-[apparaitre_300ms_ease-out] md:h-[min(90dvh,58rem)] md:w-[min(94vw,84rem)] md:rounded-[1.5rem]"
       >
         {current && (
-          <div className="flex h-full flex-col overflow-y-auto md:grid md:grid-cols-[1fr_20rem] md:overflow-hidden">
-            <div className="relative min-h-[55dvh] flex-1 bg-encre md:min-h-0">
+          <div className="flex h-full flex-col overflow-y-auto md:grid md:grid-cols-[1fr_22rem] md:overflow-hidden">
+            <div className="relative min-h-[55dvh] flex-1 bg-noyer-clair md:min-h-0">
               <Image
                 key={current.slug}
                 src={current.image}
@@ -164,12 +226,12 @@ export function Gallery({ projects }: { projects: Project[] }) {
                 fill
                 loading="eager"
                 sizes="(min-width: 768px) 70vw, 100vw"
-                className="object-contain"
+                className="animate-[apparaitre_500ms_ease-out] object-contain"
               />
             </div>
             <div className="flex flex-col gap-6 p-6 md:overflow-y-auto md:p-8">
               <div className="flex items-start justify-between gap-4">
-                <p className="cote-texte" aria-live="polite">
+                <p className="mention text-lin" aria-live="polite">
                   {openIndex! + 1} sur {visible.length}
                   <span className="sr-only"> : {current.title}</span>
                 </p>
@@ -177,7 +239,7 @@ export function Gallery({ projects }: { projects: Project[] }) {
                   ref={closeRef}
                   type="button"
                   onClick={() => dialogRef.current?.close()}
-                  className="-mt-2 -mr-2 inline-flex min-h-11 items-center px-2 font-medium underline underline-offset-4"
+                  className="-mt-2 -mr-2 inline-flex min-h-11 items-center rounded-full px-3 font-medium underline underline-offset-4"
                 >
                   Fermer
                 </button>
@@ -193,8 +255,8 @@ export function Gallery({ projects }: { projects: Project[] }) {
                   ["Dimensions", current.dimensions],
                   ["Durée", current.duration],
                 ].map(([term, value]) => (
-                  <div key={term} className="border-t border-trait pt-3">
-                    <dt className="cote-texte">{term}</dt>
+                  <div key={term} className="border-t border-filet-sombre pt-3">
+                    <dt className="mention text-lin">{term}</dt>
                     <dd className="mt-0.5">{value}</dd>
                   </div>
                 ))}
@@ -204,14 +266,14 @@ export function Gallery({ projects }: { projects: Project[] }) {
                   <button
                     type="button"
                     onClick={() => step(-1)}
-                    className="min-h-11 rounded-[3px] border border-encre px-3 font-medium"
+                    className="min-h-12 rounded-full border border-sciure px-3 font-medium transition-colors hover:bg-sciure hover:text-noyer"
                   >
                     Précédente
                   </button>
                   <button
                     type="button"
                     onClick={() => step(1)}
-                    className="min-h-11 rounded-[3px] border border-encre px-3 font-medium"
+                    className="min-h-12 rounded-full border border-sciure px-3 font-medium transition-colors hover:bg-sciure hover:text-noyer"
                   >
                     Suivante
                   </button>

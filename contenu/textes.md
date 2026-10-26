@@ -5,13 +5,18 @@ affichés sur le site viennent de src/content (coordonnées, services,
 réalisations) et des fichiers de pages dans src/app.
 
 ## Accueil
-Titre : Cuisines, rangements et escaliers sur mesure
-Sous-titre : Dessinés et fabriqués dans notre atelier, posés par la même
-équipe. La visite et le devis sont gratuits.
-Sections : Ce que nous fabriquons (4 services), Quelques réalisations
-(6 projets), De la prise de mesures à la pose (4 étapes, frise à
-l'échelle des durées), Un atelier, six personnes, bandeau « Une cuisine,
-un rangement, un escalier en projet ? ».
+Titre : Cuisines, rangements et escaliers sur mesure. Dessinés et
+fabriqués à l'atelier, posés par la même équipe.
+Indicateur : atelier ouvert ou fermé, calculé d'après les horaires.
+Manifeste : Tout est dessiné, débité et assemblé dans notre atelier. Nous
+n'achetons pas de meubles en kit. La même équipe fabrique et pose : vous
+avez un seul interlocuteur du premier rendez-vous à la pose.
+Repères : depuis 2009, 6 personnes, 60 km autour de l'atelier, visite et
+devis gratuits.
+Sections : Ce que nous fabriquons (4 services), Réalisations (6 projets
+en défilement horizontal), De la prise de mesures à la pose (4 étapes),
+Les bois que nous travaillons, Un atelier, six personnes, bandeau
+« Une cuisine, un rangement, un escalier en projet ? ».
 
 ## Services
 Titre : Ce que nous fabriquons

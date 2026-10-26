@@ -2,13 +2,18 @@
 
 import Link from "next/link";
 import { type FormEvent, useEffect, useRef, useState } from "react";
-import { type ContactErrors, type ContactInput, projectKinds, validateContact } from "@/lib/contact";
+import {
+  type ContactErrors,
+  type ContactInput,
+  projectKinds,
+  validateContact,
+} from "@/lib/contact";
 import { site } from "@/content/site";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
 const fieldClass =
-  "mt-2 block w-full rounded-[3px] border border-graphite bg-white px-4 py-3 text-[1.0625rem] text-encre aria-invalid:border-erreur";
+  "mt-2 block w-full rounded-xl border border-brou/60 bg-copeau px-4 py-3.5 text-[1.0625rem] text-noyer transition-colors hover:border-noyer focus-visible:border-noyer aria-invalid:border-erreur";
 
 function ErrorText({ field, errors }: { field: keyof ContactInput; errors: ContactErrors }) {
   if (!errors[field]) return null;
@@ -88,14 +93,14 @@ export function ContactForm() {
 
   if (status === "sent") {
     return (
-      <div className="border-t-2 border-vert bg-ivoire p-8 lg:p-10">
-        <h2 ref={sentRef} tabIndex={-1} className="titre-3 outline-none">
+      <div className="rounded-[1.5rem] bg-noyer p-8 text-sciure lg:p-12">
+        <h2 ref={sentRef} tabIndex={-1} className="titre-2 outline-none">
           Demande envoyée
         </h2>
-        <p className="mt-4 max-w-[48ch]">
+        <p className="chapeau mt-6 max-w-[44ch] text-lin">
           Merci {sentName}. Léa ou Daniel vous rappelle sous deux jours ouvrés pour convenir de la
           visite. Si c&apos;est urgent, appelez l&apos;atelier au{" "}
-          <a href={site.phone.href} className="lien font-semibold whitespace-nowrap">
+          <a href={site.phone.href} className="lien font-semibold whitespace-nowrap text-sciure">
             {site.phone.display}
           </a>
           .
@@ -115,12 +120,14 @@ export function ContactForm() {
       onChange={onInput}
       noValidate
       aria-labelledby="formulaire-titre"
-      className="bg-ivoire p-6 sm:p-8 lg:p-10"
+      className="rounded-[1.5rem] border border-filet bg-copeau p-6 sm:p-9 lg:p-12"
     >
-      <h2 id="formulaire-titre" className="titre-3">
+      <h2 id="formulaire-titre" className="titre-2">
         Votre projet
       </h2>
-      <p className="mt-2 text-[0.9375rem] text-graphite">Tous les champs sont obligatoires, sauf l&apos;email.</p>
+      <p className="mt-3 text-[0.9375rem] text-brou">
+        Tous les champs sont obligatoires, sauf l&apos;email.
+      </p>
 
       <div className="mt-8 grid gap-6 sm:grid-cols-2">
         <div className="sm:col-span-2">
@@ -160,7 +167,7 @@ export function ContactForm() {
 
         <div>
           <label htmlFor="email" className="font-medium">
-            Email <span className="font-normal text-graphite">(facultatif)</span>
+            Email <span className="font-normal text-brou">(facultatif)</span>
           </label>
           <input
             id="email"
@@ -180,7 +187,7 @@ export function ContactForm() {
             {projectKinds.map((kind) => (
               <label
                 key={kind}
-                className="relative inline-flex min-h-11 cursor-pointer items-center rounded-[3px] border border-graphite bg-white px-4 text-[0.9375rem] has-checked:border-encre has-checked:bg-encre has-checked:text-papier has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-focus-visible:outline-vert"
+                className="relative inline-flex min-h-12 cursor-pointer items-center rounded-full border border-brou/60 px-5 text-[0.9375rem] font-medium transition-colors hover:border-noyer has-checked:border-noyer has-checked:bg-noyer has-checked:text-sciure has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-focus-visible:outline-chene"
               >
                 <input type="radio" name="kind" value={kind} className="sr-only" />
                 {kind}
@@ -194,7 +201,7 @@ export function ContactForm() {
           <label htmlFor="message" className="font-medium">
             Votre projet en quelques lignes
           </label>
-          <p id="message-aide" className="mt-1 text-[0.9375rem] text-graphite">
+          <p id="message-aide" className="mt-1 text-[0.9375rem] text-brou">
             La pièce, les dimensions si vous les avez, le bois qui vous plaît, le délai souhaité.
           </p>
           <textarea
@@ -218,11 +225,11 @@ export function ContactForm() {
       </div>
 
       {status === "error" && (
-        <div role="alert" className="mt-8 border-l-2 border-erreur bg-white p-4">
+        <div role="alert" className="mt-8 rounded-xl border border-erreur p-5">
           <p className="font-medium">{serverError}</p>
-          <p className="mt-1 text-graphite">
+          <p className="mt-1 text-brou">
             Appelez l&apos;atelier au{" "}
-            <a href={site.phone.href} className="lien font-semibold whitespace-nowrap text-encre">
+            <a href={site.phone.href} className="lien font-semibold whitespace-nowrap text-noyer">
               {site.phone.display}
             </a>{" "}
             ou réessayez dans quelques minutes.
@@ -234,11 +241,11 @@ export function ContactForm() {
         <button
           type="submit"
           aria-disabled={status === "sending" || undefined}
-          className="inline-flex min-h-13 items-center justify-center rounded-[3px] bg-vert px-7 font-semibold text-white transition-colors hover:bg-vert-fonce aria-disabled:cursor-wait aria-disabled:bg-vert-fonce"
+          className="bouton bouton-noyer min-h-14 px-8 aria-disabled:cursor-wait"
         >
           {status === "sending" ? "Envoi en cours" : "Envoyer la demande"}
         </button>
-        <p className="max-w-[36ch] text-[0.9375rem] text-graphite">
+        <p className="max-w-[36ch] text-[0.9375rem] text-brou">
           Vos coordonnées servent uniquement à vous répondre.{" "}
           <Link href="/mentions-legales#donnees" className="lien">
             En savoir plus
