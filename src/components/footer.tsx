@@ -66,7 +66,7 @@ export function Footer() {
         </nav>
       </div>
 
-      <div className="border-t border-white/15">
+      <div className="border-t border-graphite">
         <div className="conteneur flex flex-wrap items-center justify-between gap-x-8 gap-y-2 py-6 text-[0.9375rem] text-sauge">
           <p>© Atelier Kora</p>
           <Link href="/mentions-legales" className="lien">

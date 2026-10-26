@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { PageIntro } from "@/components/page-intro";
 import { site } from "@/content/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/mentions-legales",
   title: "Mentions légales et données personnelles",
-  description: "Éditeur, hébergeur, crédits photos et traitement des données personnelles du site Atelier Kora.",
-  alternates: { canonical: "/mentions-legales" },
-};
+  description:
+    "Éditeur, hébergeur, crédits photos et traitement des données personnelles du site Atelier Kora.",
+});
 
 export default function MentionsPage() {
   return (
@@ -18,8 +20,12 @@ export default function MentionsPage() {
             <section>
               <h2>Éditeur</h2>
               <p>
-                {site.name}, {site.address.street}, {site.address.area}. Téléphone :{" "}
-                {site.phone.display}. Email : {site.email}.
+                {site.name}, {site.address.street}, {site.address.area}. Téléphone :{" "}
+                {site.phone.display}. Email : {site.email}.
+              </p>
+              <p>
+                Forme juridique, numéro d&apos;immatriculation et directeur de la publication :
+                [À COMPLÉTER].
               </p>
               <p>
                 Atelier Kora est une entreprise fictive, créée pour un projet de démonstration. Les
@@ -29,15 +35,16 @@ export default function MentionsPage() {
 
             <section>
               <h2>Hébergement</h2>
-              <p>Le site est hébergé par Vercel Inc. (vercel.com).</p>
+              <p>
+                Le site est hébergé par Vercel Inc., dont les coordonnées figurent sur vercel.com.
+              </p>
             </section>
 
             <section>
               <h2>Photographies</h2>
               <p>
                 Les photographies proviennent de la banque d&apos;images Unsplash et sont utilisées
-                selon la licence Unsplash. La liste des photos et de leurs sources figure dans le
-                fichier CREDITS.md du code source du site.
+                selon la licence Unsplash.
               </p>
             </section>
 
@@ -49,10 +56,9 @@ export default function MentionsPage() {
                 vous rappeler et à établir un devis. Elles ne sont ni vendues ni transmises à des
                 tiers, en dehors du service d&apos;envoi d&apos;emails qui nous les achemine.
               </p>
+              <p>Durée de conservation des demandes : [À COMPLÉTER].</p>
               <p>
-                Nous conservons votre demande le temps de traiter votre projet, puis trois ans au
-                plus si vous ne devenez pas client. Pour consulter, corriger ou supprimer vos
-                données, écrivez à {site.email}.
+                Pour consulter, corriger ou supprimer vos données, écrivez à {site.email}.
               </p>
               <p>Le site ne dépose aucun cookie de mesure d&apos;audience ou de publicité.</p>
             </section>

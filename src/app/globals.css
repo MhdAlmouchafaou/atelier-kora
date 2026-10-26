@@ -83,6 +83,13 @@
     line-height: 1.1;
   }
 
+  /* Chapeau : texte d'introduction sous un titre de page. */
+  .chapeau {
+    font-size: 1.1875rem;
+    line-height: 1.5;
+    color: var(--color-graphite);
+  }
+
   /* Texte des cotes et légendes. */
   .cote-texte {
     font-size: var(--text-cote);

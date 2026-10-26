@@ -71,5 +71,8 @@ npx skills add https://github.com/hardikpandya/stop-slop --skill stop-slop
 
 - `npm run build` et `npm run lint` sans erreur.
 - Rendu contrôlé à 375, 768 et 1280 px.
-- Lighthouse (mobile) : accessibilité, bonnes pratiques et SEO à 100.
+- Lighthouse (mobile) : performance de 93 à 99, accessibilité, bonnes
+  pratiques et SEO à 100 sur l'accueil, les services et les réalisations.
+- Tests automatiques (Playwright) : filtres de la galerie, visionneuse au
+  clavier, menu mobile, formulaire (erreurs, focus, envoi), route API.
 - Contrastes de couleurs mesurés (voir DESIGN.md).

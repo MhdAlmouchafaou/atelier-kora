@@ -8,7 +8,7 @@ export function PrimaryLink({ tone = "vert", className = "", ...props }: LinkPro
   const colors =
     tone === "vert"
       ? "bg-vert text-white hover:bg-vert-fonce"
-      : "bg-white text-vert hover:bg-papier";
+      : "bg-white text-vert hover:bg-ivoire";
   return (
     <Link
       {...props}

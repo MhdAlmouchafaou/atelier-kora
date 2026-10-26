@@ -1,13 +1,14 @@
 import { steps } from "@/content/services";
 
-// Les étapes d'un projet, sous forme de cotation en chaîne (comme sur un plan) :
-// un seul trait continu, coupé par un repère à chaque changement d'étape.
-// Sur grand écran, chaque segment est proportionnel à la durée de l'étape.
+// Les étapes d'un projet type, cotées en chaîne comme sur un plan :
+// un trait continu, coupé par un repère à chaque étape. La longueur de chaque
+// segment est proportionnelle à la durée habituelle de l'étape (en jours ouvrés).
 
-function Repere({ className = "" }: { className?: string }) {
+function Repere() {
   return (
-    <span aria-hidden="true" className={`absolute text-graphite ${className}`}>
-      <svg viewBox="0 0 10 10" className="h-2.5 w-2.5" focusable="false">
+    <span aria-hidden="true" className="absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2">
+      <span className="absolute top-1/2 left-1/2 block h-4 w-px -translate-x-1/2 -translate-y-1/2 bg-graphite" />
+      <svg viewBox="0 0 10 10" className="relative block h-2.5 w-2.5 text-graphite" focusable="false">
         <line x1="1" y1="9" x2="9" y2="1" stroke="currentColor" strokeWidth="1.25" />
       </svg>
     </span>
@@ -16,50 +17,45 @@ function Repere({ className = "" }: { className?: string }) {
 
 export function ProcessTimeline() {
   return (
-    <ol className="mt-12 lg:mt-16 lg:flex">
-      {steps.map((step, index) => {
-        const last = index === steps.length - 1;
-        return (
-          <li
+    <div className="mt-12 lg:mt-16">
+      {/* Chaîne de cotes, à l'échelle sur toutes les largeurs d'écran. */}
+      <div aria-hidden="true" className="relative mx-1.5 flex h-8 items-center">
+        {steps.map((step, index) => (
+          <div
             key={step.title}
             style={{ flexGrow: step.days, flexBasis: 0 }}
-            className="relative pb-10 pl-10 last:pb-0 lg:min-w-[13rem] lg:pb-0 lg:pl-0"
+            className="relative flex h-full items-center"
           >
-            {/* Trait de cote : vertical sur téléphone, horizontal sur grand écran. */}
-            <span
-              aria-hidden="true"
-              className={`absolute top-1 left-3 w-px bg-graphite lg:top-3 lg:right-0 lg:left-0 lg:h-px lg:w-auto ${last ? "bottom-1 lg:bottom-auto" : "bottom-0 lg:bottom-auto"}`}
-            />
-            {/* Rappel et repère au début de l'étape. */}
-            <span
-              aria-hidden="true"
-              className="absolute top-1 left-1.5 h-px w-3.5 bg-graphite lg:top-0.5 lg:left-0 lg:h-5 lg:w-px"
-            />
-            <Repere className="top-[-0.05rem] left-[0.5rem] lg:top-2 lg:left-[-0.3rem]" />
-            {last && (
-              <>
-                <span
-                  aria-hidden="true"
-                  className="absolute bottom-1 left-1.5 h-px w-3.5 bg-graphite lg:top-0.5 lg:right-0 lg:bottom-auto lg:left-auto lg:h-5 lg:w-px"
-                />
-                <Repere className="bottom-[-0.05rem] left-[0.5rem] lg:top-2 lg:right-[-0.3rem] lg:bottom-auto lg:left-auto" />
-              </>
-            )}
+            <span className="h-px w-full bg-graphite" />
+            <Repere />
+            <span className="cote-texte absolute -top-2 left-1/2 -translate-x-1/2 bg-papier px-1">
+              {index + 1}
+            </span>
+          </div>
+        ))}
+        <span className="absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2">
+          <span className="absolute top-1/2 left-1/2 block h-4 w-px -translate-x-1/2 -translate-y-1/2 bg-graphite" />
+          <svg viewBox="0 0 10 10" className="relative block h-2.5 w-2.5 text-graphite" focusable="false">
+            <line x1="1" y1="9" x2="9" y2="1" stroke="currentColor" strokeWidth="1.25" />
+          </svg>
+        </span>
+      </div>
 
-            <div className="lg:pt-10 lg:pr-8">
-              <p className="cote-texte">
-                <span className="sr-only">Durée : </span>
-                {step.duration}
-              </p>
-              <h3 className="mt-2 text-[1.375rem] leading-tight">
-                <span className="mr-2 text-graphite">{index + 1}.</span>
-                {step.title}
-              </h3>
-              <p className="mt-2 max-w-[34ch] text-graphite">{step.text}</p>
-            </div>
+      <ol className="mt-8 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+        {steps.map((step, index) => (
+          <li key={step.title}>
+            <p className="cote-texte">
+              <span className="sr-only">Durée : </span>
+              {step.duration}
+            </p>
+            <h3 className="mt-2 text-[1.375rem] leading-tight">
+              <span className="mr-2 text-graphite">{index + 1}.</span>
+              {step.title}
+            </h3>
+            <p className="mt-2 max-w-[34ch] text-graphite">{step.text}</p>
           </li>
-        );
-      })}
-    </ol>
+        ))}
+      </ol>
+    </div>
   );
 }

@@ -6,7 +6,7 @@ export function PageIntro({ title, children }: { title: string; children?: React
     <div className="conteneur pt-12 pb-14 lg:pt-20 lg:pb-20">
       <h1 className="titre-1 max-w-[16ch]">{title}</h1>
       {children && (
-        <div className="mt-6 max-w-[58ch] space-y-4 text-[1.1875rem] leading-[1.5] text-graphite">
+        <div className="chapeau mt-6 max-w-[58ch] space-y-4">
           {children}
         </div>
       )}

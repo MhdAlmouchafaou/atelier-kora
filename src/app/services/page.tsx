@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import { CtaBand } from "@/components/cta-band";
@@ -7,21 +8,21 @@ import { ProcessTimeline } from "@/components/process-timeline";
 import { projects } from "@/content/projets";
 import { services } from "@/content/services";
 
-export const metadata: Metadata = {
-  title: "Services : cuisines, rangements, escaliers, commerces",
+export const metadata: Metadata = pageMetadata({
+  path: "/services",
+  title: "Services : cuisines, rangements, escaliers, agencement",
   description:
-    "Cuisines, dressings, bibliothèques, escaliers et agencement de commerces et bureaux sur mesure, en chêne, noyer, frêne, hêtre ou pin. Visite et devis gratuits.",
-  alternates: { canonical: "/services" },
-};
+    "Cuisines, dressings, bibliothèques, escaliers, agencements et habillages sur mesure, en chêne, noyer, frêne, hêtre ou pin. Visite et devis gratuits.",
+});
 
 export default function ServicesPage() {
   return (
     <>
       <PageIntro title="Ce que nous fabriquons">
         <p>
-          Quatre métiers, une même méthode : nous relevons les cotes chez vous, dessinons un plan,
-          fabriquons tout à l&apos;atelier et posons nous-mêmes. Chaque projet fait l&apos;objet
-          d&apos;un devis détaillé après la visite.
+          Pour chaque projet, nous relevons les cotes chez vous, dessinons un plan, fabriquons à
+          l&apos;atelier et posons nous-mêmes. Le devis détaillé suit la visite ; l&apos;un et
+          l&apos;autre sont gratuits.
         </p>
       </PageIntro>
 
@@ -34,7 +35,7 @@ export default function ServicesPage() {
             aria-labelledby={`${service.slug}-titre`}
             className="border-t border-trait"
           >
-            <div className="conteneur grid gap-10 py-16 md:grid-cols-12 lg:gap-8 lg:py-24">
+            <div className="conteneur section grid gap-10 md:grid-cols-12 lg:gap-8">
               <div
                 className={`relative aspect-[3/2] overflow-hidden bg-trait md:col-span-6 ${index % 2 === 1 ? "md:order-2 md:col-start-7" : ""}`}
               >
@@ -69,8 +70,8 @@ export default function ServicesPage() {
                     <dd className="mt-1 font-medium">{service.woods}</dd>
                   </div>
                   <div>
-                    <dt className="cote-texte">Délai habituel</dt>
-                    <dd className="mt-1 font-medium">{service.delay}</dd>
+                    <dt className="cote-texte">Finitions</dt>
+                    <dd className="mt-1 font-medium">{service.finishes}</dd>
                   </div>
                 </dl>
                 <Link
@@ -101,13 +102,12 @@ export default function ServicesPage() {
           </h2>
           <div className="space-y-5 text-[1.125rem] md:col-span-6 md:col-start-7">
             <p>
-              Une finition à l&apos;huile se ravive avec une nouvelle couche, tous les un à deux
-              ans selon l&apos;usage. Un léger égrenage suffit avant d&apos;appliquer
-              l&apos;huile.
+              Une finition à l&apos;huile se ravive avec une nouvelle couche tous les un à deux
+              ans, après un léger égrenage.
             </p>
             <p>
-              Un vernis à l&apos;eau se nettoie avec un chiffon et de l&apos;eau savonneuse, et ne
-              demande rien d&apos;autre. Nous vous laissons une fiche d&apos;entretien à la pose.
+              Un vernis à l&apos;eau se nettoie à l&apos;eau savonneuse et ne demande rien
+              d&apos;autre. Nous laissons une fiche d&apos;entretien à la pose.
             </p>
           </div>
         </div>

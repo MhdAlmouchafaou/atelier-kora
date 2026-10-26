@@ -1,32 +1,33 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import { CtaBand } from "@/components/cta-band";
 import { PageIntro } from "@/components/page-intro";
 import { site } from "@/content/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/a-propos",
   title: "L'atelier et l'équipe",
   description:
-    "Atelier Kora : six personnes qui dessinent, fabriquent et posent depuis 2009. Les bois que nous travaillons et l'usage de chacun.",
-  alternates: { canonical: "/a-propos" },
-};
+    "Atelier Kora : six personnes qui dessinent, fabriquent et posent depuis 2009. Les bois que nous travaillons et l'usage de chacun.",
+});
 
 const team = [
   { name: "Daniel Kora", role: "Fondateur. Reçoit les clients et prend les mesures." },
   { name: "Sarah Morel", role: "Dessine les plans et prépare les devis." },
   { name: "Thomas Ricci", role: "Menuisier d'atelier." },
   { name: "Inès Dumont", role: "Menuisière d'atelier." },
-  { name: "Marc Lefèvre", role: "Dirige les équipes de pose." },
+  { name: "Marc Lefèvre", role: "Dirige la pose." },
   { name: "Léa Bernard", role: "Accueil et suivi des chantiers." },
 ];
 
 const woods = [
-  { name: "Chêne", use: "Cuisines, escaliers, dressings", note: "Dur et veiné. Se patine et fonce légèrement avec le temps." },
+  { name: "Chêne", use: "Cuisines, escaliers, dressings", note: "Dur et veiné, il fonce légèrement avec le temps." },
   { name: "Noyer", use: "Façades, habillages, mobilier", note: "Brun profond, veinage marqué." },
-  { name: "Frêne", use: "Escaliers, plans", note: "Clair et souple, il encaisse bien les chocs." },
-  { name: "Hêtre", use: "Plans de travail", note: "Dense, grain fin. Accepte l'huile alimentaire." },
-  { name: "Pin", use: "Lambris, escaliers", note: "Tendre et noueux, le plus abordable." },
-  { name: "Contreplaqué de bouleau", use: "Caissons, bibliothèques", note: "Stable, ne travaille pas. Chants réguliers laissés visibles ou laqués." },
+  { name: "Frêne", use: "Escaliers, plans", note: "Clair et souple, il résiste bien aux chocs." },
+  { name: "Hêtre", use: "Plans de travail", note: "Dense, grain fin, il accepte l'huile alimentaire." },
+  { name: "Pin", use: "Lambris, escaliers", note: "Tendre et noueux, c'est le moins cher." },
+  { name: "Contreplaqué de bouleau", use: "Caissons, bibliothèques", note: "Stable ; ses chants restent visibles ou sont laqués." },
 ];
 
 const photos = [
@@ -47,7 +48,7 @@ export default function AtelierPage() {
           d&apos;escaliers. Il a travaillé seul les deux premières années.
         </p>
         <p>
-          Nous sommes aujourd&apos;hui six. Tout est dessiné, débité et assemblé ici : nous
+          Nous sommes aujourd&apos;hui six. Tout est dessiné, débité et assemblé ici : nous
           n&apos;achetons pas de meubles en kit. La même équipe fabrique et pose, et vous avez un
           seul interlocuteur du premier rendez-vous à la fin du chantier.
         </p>
@@ -62,12 +63,12 @@ export default function AtelierPage() {
                 i === 0 ? "lg:col-span-7" : i === 1 ? "lg:col-span-5 lg:row-span-2" : i === 2 ? "lg:col-span-7" : "lg:col-span-4"
               }
             >
-              <div className={`relative overflow-hidden bg-trait ${i === 1 ? "aspect-[3/4] lg:aspect-auto lg:h-[calc(100%-2rem)]" : "aspect-[3/2]"}`}>
+              <div className={`relative overflow-hidden bg-trait ${i === 1 ? "aspect-[4/5] lg:aspect-auto lg:h-[calc(100%-2rem)]" : "aspect-[3/2]"}`}>
                 <Image
                   src={photo.src}
                   alt={photo.alt}
                   fill
-                  sizes="(min-width: 1024px) 50vw, (min-width: 640px) 50vw, 100vw"
+                  sizes={i === 0 || i === 2 ? "(min-width: 1024px) 56vw, (min-width: 640px) 50vw, 100vw" : "(min-width: 1024px) 40vw, (min-width: 640px) 50vw, 100vw"}
                   preload={i === 0}
                   className="object-cover"
                 />
@@ -103,10 +104,14 @@ export default function AtelierPage() {
             Les bois que nous travaillons
           </h2>
           <p className="mt-5 max-w-[56ch] text-graphite">
-            Le bois se choisit selon l&apos;usage avant de se choisir selon la couleur. Voici ceux
-            que nous avons toujours en stock.
+            Les essences que nous travaillons le plus, et l&apos;usage que nous en faisons.
           </p>
-          <div className="mt-10 overflow-x-auto lg:mt-14">
+          <div
+            role="region"
+            aria-label="Tableau des bois, défilable horizontalement"
+            tabIndex={0}
+            className="mt-10 overflow-x-auto lg:mt-14"
+          >
             <table className="w-full min-w-[40rem] border-collapse text-left">
               <thead>
                 <tr className="border-b border-encre">

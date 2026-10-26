@@ -21,6 +21,7 @@ Les photos montrent le travail ; le texte donne les faits.
   survol #22392F
 - sauge #A9B8AE : texte secondaire sur fond encre ou vert
 - erreur #9B2C1F : messages d'erreur du formulaire, rien d'autre
+- blanc #FFFFFF : texte sur vert, fond des champs de formulaire
 - Aucune autre couleur. Aucun dégradé, aucune ombre.
 
 Contrastes mesurés : encre sur papier 14,3:1 ; graphite sur papier
@@ -40,7 +41,7 @@ depuis le projet (pas d'appel à Google Fonts).
 
 ## Échelle (px, téléphone / ordinateur)
 - h1 44 / 88, h2 32 / 52, h3 22 / 26
-- Texte 17, petit texte 15, cotes 13
+- Chapeau (introduction de page) 19, texte 17, petit texte 15, cotes 13
 - Interligne : 1,55 (texte), 1,0 à 1,1 (titres)
 - 68 caractères par ligne au plus
 
@@ -60,9 +61,13 @@ depuis le projet (pas d'appel à Google Fonts).
 - Focus clavier : contour 2 px vert, décalage 3 px, toujours visible.
 
 ## Images
-- Photos réelles uniquement, formats 4:5, 3:2 ou 1:1.
+- Photos réelles uniquement, formats 3:2 ou 4:5. La visionneuse de la
+  galerie montre la photo entière, dans ses proportions d'origine.
 - Texte alternatif : ouvrage, essence, pièce.
 - Légende sous chaque réalisation : nom, bois, finition, dimensions.
+
+## Icône du site
+L'initiale K du logotype, blanche sur vert machine.
 
 ## Mouvement
 - Un seul moment animé : au chargement de l'accueil, les cotes de la

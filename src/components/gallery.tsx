@@ -31,6 +31,7 @@ export function Gallery({ projects }: { projects: Project[] }) {
   const filter = useSyncExternalStore(subscribe, readFilter, () => "tout" as Filter);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
 
   const choose = (value: Filter) => {
     const url = new URL(window.location.href);
@@ -42,6 +43,7 @@ export function Gallery({ projects }: { projects: Project[] }) {
 
   const visible = filter === "tout" ? projects : projects.filter((p) => p.type === filter);
   const current = openIndex === null ? null : visible[openIndex];
+  const isOpen = openIndex !== null;
 
   const open = (index: number) => {
     setOpenIndex(index);
@@ -53,6 +55,18 @@ export function Gallery({ projects }: { projects: Project[] }) {
       setOpenIndex((i) => (i === null ? i : (i + delta + visible.length) % visible.length)),
     [visible.length],
   );
+
+  // À l'ouverture : focus sur « Fermer » et la page derrière ne défile plus.
+  useEffect(() => {
+    if (!isOpen) return;
+    closeRef.current?.focus();
+    const root = document.documentElement;
+    const previous = root.style.overflow;
+    root.style.overflow = "hidden";
+    return () => {
+      root.style.overflow = previous;
+    };
+  }, [isOpen]);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -68,50 +82,51 @@ export function Gallery({ projects }: { projects: Project[] }) {
   const counts = Object.fromEntries(
     projectTypes.map((t) => [t.value, projects.filter((p) => p.type === t.value).length]),
   );
+  const options = [
+    { value: "tout" as Filter, label: "Tout", count: projects.length },
+    ...projectTypes.map((t) => ({ ...t, count: counts[t.value] })),
+  ];
 
   return (
     <section aria-label="Galerie des réalisations" className="border-t border-trait">
       <div className="conteneur pt-8 pb-20 lg:pb-28">
         <div role="group" aria-label="Filtrer par type de projet" className="flex flex-wrap gap-2">
-          {[{ value: "tout" as Filter, label: "Tout", count: projects.length }, ...projectTypes.map((t) => ({ ...t, count: counts[t.value] }))].map(
-            (option) => (
-              <button
-                key={option.value}
-                type="button"
-                aria-pressed={filter === option.value}
-                onClick={() => choose(option.value)}
-                className="inline-flex min-h-11 items-center gap-2 rounded-[3px] border border-trait px-4 text-[0.9375rem] font-medium transition-colors hover:border-encre aria-pressed:border-encre aria-pressed:bg-encre aria-pressed:text-papier"
-              >
-                {option.label}
-                <span className="font-normal opacity-70 [font-variant-numeric:tabular-nums]">
-                  {option.count}
-                </span>
-              </button>
-            ),
-          )}
+          {options.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              aria-pressed={filter === option.value}
+              onClick={() => choose(option.value)}
+              className="group inline-flex min-h-11 items-center gap-2 rounded-[3px] border border-trait px-4 text-[0.9375rem] font-medium transition-colors hover:border-encre aria-pressed:border-encre aria-pressed:bg-encre aria-pressed:text-papier"
+            >
+              {option.label}
+              <span className="font-normal text-graphite [font-variant-numeric:tabular-nums] group-aria-pressed:text-sauge">
+                {option.count}
+              </span>
+            </button>
+          ))}
         </div>
 
         <p aria-live="polite" className="sr-only">
           {visible.length} réalisations affichées
         </p>
 
-        <ul className="mt-10 columns-1 gap-6 sm:columns-2 lg:mt-12 lg:columns-3 lg:gap-8">
+        <ul className="mt-10 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-12">
           {visible.map((project, index) => (
-            <li key={project.slug} className="mb-10 break-inside-avoid lg:mb-12">
+            <li key={project.slug}>
               <button
                 type="button"
                 onClick={() => open(index)}
                 className="group block w-full text-left"
                 aria-haspopup="dialog"
               >
-                <span className="block overflow-hidden bg-trait">
+                <span className="relative block aspect-[3/2] overflow-hidden bg-trait">
                   <Image
                     src={project.image}
-                    alt={project.alt}
-                    width={project.width}
-                    height={project.height}
+                    alt=""
+                    fill
                     sizes="(min-width: 1280px) 380px, (min-width: 1024px) 31vw, (min-width: 640px) 48vw, 100vw"
-                    className="h-auto w-full transition-opacity group-hover:opacity-90"
+                    className="object-cover transition-opacity group-hover:opacity-90"
                   />
                 </span>
                 <span className="mt-3 grid gap-0.5">
@@ -119,8 +134,10 @@ export function Gallery({ projects }: { projects: Project[] }) {
                     {project.title}
                   </span>
                   <span className="cote-texte">
-                    {typeLabel(project.type)}. {project.wood}.
+                    {project.wood}. {project.finish}.
                   </span>
+                  <span className="cote-texte">{project.dimensions}</span>
+                  <span className="sr-only">, agrandir la photo</span>
                 </span>
               </button>
             </li>
@@ -135,11 +152,11 @@ export function Gallery({ projects }: { projects: Project[] }) {
         onClick={(e) => {
           if (e.target === e.currentTarget) e.currentTarget.close();
         }}
-        className="m-auto h-dvh max-h-none w-full max-w-none bg-papier p-0 outline-none text-encre backdrop:bg-encre/80 open:animate-[apparaitre_200ms_ease-out] md:h-[min(90dvh,56rem)] md:w-[min(92vw,80rem)]"
+        className="m-auto h-dvh max-h-none w-full max-w-none bg-papier p-0 text-encre outline-none backdrop:bg-encre/80 open:animate-[apparaitre_200ms_ease-out] md:h-[min(90dvh,56rem)] md:w-[min(92vw,80rem)]"
       >
         {current && (
-          <div className="flex h-full flex-col md:grid md:grid-cols-[1fr_20rem]">
-            <div className="relative min-h-0 flex-1 bg-encre">
+          <div className="flex h-full flex-col overflow-y-auto md:grid md:grid-cols-[1fr_20rem] md:overflow-hidden">
+            <div className="relative min-h-[55dvh] flex-1 bg-encre md:min-h-0">
               <Image
                 key={current.slug}
                 src={current.image}
@@ -150,12 +167,14 @@ export function Gallery({ projects }: { projects: Project[] }) {
                 className="object-contain"
               />
             </div>
-            <div className="flex flex-col gap-6 overflow-y-auto p-6 md:p-8">
+            <div className="flex flex-col gap-6 p-6 md:overflow-y-auto md:p-8">
               <div className="flex items-start justify-between gap-4">
-                <p className="cote-texte">
+                <p className="cote-texte" aria-live="polite">
                   {openIndex! + 1} sur {visible.length}
+                  <span className="sr-only"> : {current.title}</span>
                 </p>
                 <button
+                  ref={closeRef}
                   type="button"
                   onClick={() => dialogRef.current?.close()}
                   className="-mt-2 -mr-2 inline-flex min-h-11 items-center px-2 font-medium underline underline-offset-4"

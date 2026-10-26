@@ -65,13 +65,13 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-6 lg:flex">
-          <a href={site.phone.href} className="text-[0.9375rem] font-medium hover:underline">
+          <a href={site.phone.href} className="lien text-[0.9375rem] font-medium">
             {site.phone.display}
           </a>
           {pathname !== "/contact" && (
           <Link
             href="/contact"
-            className="inline-flex min-h-11 items-center rounded-[3px] bg-vert px-5 text-[0.9375rem] font-semibold text-white transition-colors hover:bg-vert-fonce"
+            className="inline-flex min-h-11 items-center rounded-[3px] border border-encre px-5 text-[0.9375rem] font-semibold transition-colors hover:bg-encre hover:text-papier"
           >
             Demander un devis
           </Link>
@@ -109,7 +109,7 @@ export function Header() {
       <div
         id="menu-mobile"
         hidden={!open}
-        className="border-t border-trait bg-papier lg:hidden"
+        className="max-h-[calc(100dvh-4.25rem)] overflow-y-auto border-t border-trait bg-papier lg:hidden"
       >
         <nav aria-label="Navigation principale" className="conteneur pt-2 pb-8">
           <ul>
@@ -117,6 +117,7 @@ export function Header() {
               <li key={item.href} className="border-b border-trait">
                 <Link
                   href={item.href}
+                  onClick={() => setOpen(false)}
                   aria-current={isActive(item.href) ? "page" : undefined}
                   className="flex min-h-15 items-center text-[1.75rem] font-bold [font-variation-settings:'wdth'_72] aria-[current=page]:underline aria-[current=page]:decoration-2 aria-[current=page]:underline-offset-[6px]"
                 >
@@ -127,6 +128,7 @@ export function Header() {
           </ul>
           <Link
             href="/contact"
+            onClick={() => setOpen(false)}
             className="mt-8 flex min-h-13 items-center justify-center rounded-[3px] bg-vert px-6 font-semibold text-white"
           >
             Demander un devis

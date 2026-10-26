@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { ContactForm } from "@/components/contact-form";
 import { PageIntro } from "@/components/page-intro";
 import { site } from "@/content/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/contact",
   title: "Demander un devis",
   description:
-    "Décrivez votre projet de cuisine, rangement, escalier ou agencement. Atelier Kora vous rappelle pour fixer la visite. Visite et devis gratuits.",
-  alternates: { canonical: "/contact" },
-};
+    "Décrivez votre projet de cuisine, rangement, escalier ou agencement. Atelier Kora vous rappelle sous deux jours ouvrés. Visite et devis gratuits.",
+});
 
 const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
   `${site.name} ${site.address.street} ${site.address.area}`,
@@ -19,8 +20,8 @@ export default function ContactPage() {
     <>
       <PageIntro title="Demander un devis">
         <p>
-          Décrivez votre projet en quelques lignes. Nous vous rappelons pour fixer une visite :
-          les mesures, le plan et le devis sont gratuits.
+          Décrivez votre projet en quelques lignes. Nous vous rappelons sous deux jours ouvrés
+          pour fixer la visite. La visite et le devis sont gratuits.
         </p>
       </PageIntro>
 

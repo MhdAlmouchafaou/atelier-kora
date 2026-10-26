@@ -19,6 +19,10 @@ export async function POST(request: Request) {
     return Response.json({ error: "Requête illisible." }, { status: 400 });
   }
 
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
+    return Response.json({ error: "Requête illisible." }, { status: 400 });
+  }
+
   // Champ piège rempli : c'est un robot. On répond comme si tout allait bien.
   if (body.website) return Response.json({ ok: true });
 
@@ -53,7 +57,7 @@ export async function POST(request: Request) {
   ];
 
   const { error } = await resend.emails.send({
-    from: process.env.CONTACT_FROM ?? `${site.name} <onboarding@resend.dev>`,
+    from: process.env.CONTACT_FROM || `${site.name} <onboarding@resend.dev>`,
     to: [to],
     replyTo: input.email || undefined,
     subject: `Demande de devis : ${input.kind}, ${input.name}`,

@@ -1,14 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { type FormEvent, useRef, useState } from "react";
+import { type FormEvent, useEffect, useRef, useState } from "react";
 import { type ContactErrors, type ContactInput, projectKinds, validateContact } from "@/lib/contact";
 import { site } from "@/content/site";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
 const fieldClass =
-  "mt-2 block w-full rounded-[3px] border border-graphite bg-white px-4 py-3 text-[1.0625rem] text-encre placeholder:text-graphite/70 aria-invalid:border-erreur";
+  "mt-2 block w-full rounded-[3px] border border-graphite bg-white px-4 py-3 text-[1.0625rem] text-encre aria-invalid:border-erreur";
 
 function ErrorText({ field, errors }: { field: keyof ContactInput; errors: ContactErrors }) {
   if (!errors[field]) return null;
@@ -25,9 +25,28 @@ export function ContactForm() {
   const [serverError, setServerError] = useState("");
   const [sentName, setSentName] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
+  const sentRef = useRef<HTMLHeadingElement>(null);
+
+  // Après l'envoi, le focus va sur le message de confirmation.
+  useEffect(() => {
+    if (status === "sent") sentRef.current?.focus();
+  }, [status]);
+
+  // Une erreur disparaît dès que le visiteur corrige le champ.
+  function onInput(event: FormEvent<HTMLFormElement>) {
+    const name = (event.target as HTMLInputElement).name as keyof ContactInput;
+    if (errors[name]) {
+      setErrors((current) => {
+        const next = { ...current };
+        delete next[name];
+        return next;
+      });
+    }
+  }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (status === "sending") return;
     const data = new FormData(event.currentTarget);
     const input: ContactInput = {
       name: String(data.get("name") ?? ""),
@@ -62,15 +81,17 @@ export function ContactForm() {
       setSentName(input.name.trim().split(" ")[0]);
       setStatus("sent");
     } catch {
-      setServerError("La demande n'est pas partie : la connexion semble coupée.");
+      setServerError("La demande n'est pas partie : la connexion semble coupée.");
       setStatus("error");
     }
   }
 
   if (status === "sent") {
     return (
-      <div role="status" className="border-t-2 border-vert bg-ivoire p-8 lg:p-10">
-        <h2 className="titre-3">Demande envoyée</h2>
+      <div className="border-t-2 border-vert bg-ivoire p-8 lg:p-10">
+        <h2 ref={sentRef} tabIndex={-1} className="titre-3 outline-none">
+          Demande envoyée
+        </h2>
         <p className="mt-4 max-w-[48ch]">
           Merci {sentName}. Léa ou Daniel vous rappelle sous deux jours ouvrés pour convenir de la
           visite. Si c&apos;est urgent, appelez l&apos;atelier au{" "}
@@ -90,6 +111,8 @@ export function ContactForm() {
     <form
       ref={formRef}
       onSubmit={onSubmit}
+      onInput={onInput}
+      onChange={onInput}
       noValidate
       aria-labelledby="formulaire-titre"
       className="bg-ivoire p-6 sm:p-8 lg:p-10"
@@ -151,11 +174,7 @@ export function ContactForm() {
           <ErrorText field="email" errors={errors} />
         </div>
 
-        <fieldset
-          className="sm:col-span-2"
-          aria-invalid={Boolean(errors.kind) || undefined}
-          aria-describedby={describedBy("kind")}
-        >
+        <fieldset className="sm:col-span-2" aria-describedby={describedBy("kind")}>
           <legend className="font-medium">Type de projet</legend>
           <div className="mt-3 flex flex-wrap gap-2">
             {projectKinds.map((kind) => (
@@ -214,12 +233,12 @@ export function ContactForm() {
       <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <button
           type="submit"
-          disabled={status === "sending"}
-          className="inline-flex min-h-13 items-center justify-center rounded-[3px] bg-vert px-7 font-semibold text-white transition-colors hover:bg-vert-fonce disabled:cursor-wait disabled:opacity-70"
+          aria-disabled={status === "sending" || undefined}
+          className="inline-flex min-h-13 items-center justify-center rounded-[3px] bg-vert px-7 font-semibold text-white transition-colors hover:bg-vert-fonce aria-disabled:cursor-wait aria-disabled:bg-vert-fonce"
         >
           {status === "sending" ? "Envoi en cours" : "Envoyer la demande"}
         </button>
-        <p className="max-w-[36ch] text-[0.875rem] text-graphite">
+        <p className="max-w-[36ch] text-[0.9375rem] text-graphite">
           Vos coordonnées servent uniquement à vous répondre.{" "}
           <Link href="/mentions-legales#donnees" className="lien">
             En savoir plus

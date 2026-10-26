@@ -8,10 +8,9 @@ import "./globals.css";
 
 // Archivo variable (graisse 100 à 900, largeur 62 % à 125 %), servie depuis le projet.
 const archivo = localFont({
-  src: [
-    { path: "./fonts/archivo-latin-standard-normal.woff2", style: "normal" },
-    { path: "./fonts/archivo-latin-ext-standard-normal.woff2", style: "normal" },
-  ],
+  // Le sous-ensemble latin couvre tous les caractères du français.
+  src: "./fonts/archivo-latin-standard-normal.woff2",
+  style: "normal",
   weight: "100 900",
   display: "swap",
   variable: "--font-archivo",
@@ -29,7 +28,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: site.name,
-    locale: "fr",
+    locale: "fr_FR",
   },
   formatDetection: { telephone: false },
 };
